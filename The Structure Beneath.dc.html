@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;background:#efeee9;}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:3px;background:#dcdad2;border-radius:2px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#2f4a6b;cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:#2f4a6b;cursor:pointer;}
+  @keyframes cardUp{from{transform:translateY(34px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  ::selection{background:#d7e0ec;}
+</style>
+</helmet>
+
+<div style="height:100vh; display:flex; flex-direction:column; background:#efeee9; font-family:'IBM Plex Sans',system-ui,sans-serif; color:#1b1b1a;">
+
+  <!-- ===== HEADER ===== -->
+  <div style="flex:0 0 56px; display:flex; align-items:center; gap:14px; padding:0 22px; border-bottom:1px solid #dcdad2; background:#f4f3ef;">
+    <sc-if value="{{ notGallery }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goGallery }}" style="width:30px; height:30px; border:1px solid #dcdad2; background:#fff; border-radius:2px; cursor:pointer; font-size:15px; color:#1b1b1a; line-height:1; display:flex; align-items:center; justify-content:center;" style-hover="background:#f0eee8;">&#8592;</button>
+    </sc-if>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:#1b1b1a; font-weight:500;">The Structure Beneath</div>
+    <sc-if value="{{ notGallery }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.04em; color:#9a968c;">/&nbsp;&nbsp;{{ art.title }}</div>
+    </sc-if>
+  </div>
+
+  <!-- ===== GALLERY ===== -->
+  <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1; overflow:auto;">
+      <div style="max-width:1060px; margin:0 auto; padding:52px 24px 72px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#9a968c;">Six artworks &middot; one hidden algorithm each</div>
+        <h1 style="font-size:30px; font-weight:600; margin:14px 0 12px; letter-spacing:-0.01em;">Find the algorithm hiding in the artwork.</h1>
+        <p style="font-size:15px; line-height:1.6; color:#6b685f; max-width:560px; margin:0;">Choose a piece. Observe it closely. Then tune a live algorithm in real time until you believe it captures something true about the artwork &mdash; and find out what was hiding underneath.</p>
+
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:40px;">
+          <sc-for list="{{ galleryItems }}" as="item" hint-placeholder-count="6">
+            <button onClick="{{ item.open }}" style="text-align:left; padding:0; border:1px solid #dcdad2; background:#fbfaf7; border-radius:3px; cursor:pointer; overflow:hidden; font-family:inherit; transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;" style-hover="transform:translateY(-3px); box-shadow:0 10px 28px rgba(0,0,0,.10); border-color:#c4c1b6;">
+              <div style="aspect-ratio:4/3; background:repeating-linear-gradient(45deg,#e7e5dd 0 11px,#efeee9 11px 22px); display:flex; align-items:center; justify-content:center; border-bottom:1px solid #dcdad2;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em; color:#b3afa4; text-transform:uppercase;">{{ item.title }}</span>
+              </div>
+              <div style="padding:14px 16px 16px;">
+                <div style="font-size:16px; font-weight:600; line-height:1.25;">{{ item.title }}</div>
+                <div style="font-size:13px; color:#8a877e; margin-top:3px;">{{ item.artist }} &middot; {{ item.date }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#2f4a6b; margin-top:12px;">{{ item.difficulty }}</div>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+        <div style="margin-top:48px; padding-top:20px; border-top:1px solid #dcdad2; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#a8a499;">Created by the KCS Computer Science Department for Curiosity Day 2026.</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== DETECTIVE ===== -->
+  <sc-if value="{{ isDetective }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1; display:flex; flex-direction:column; overflow:auto;">
+
+      <!-- zone 1: observation -->
+      <div style="border-bottom:1px solid #dcdad2; padding:20px 24px; background:#fbfaf7;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#9a968c;">Observe</div>
+        <div style="font-size:19px; font-weight:500; line-height:1.4; max-width:820px; margin:7px 0 14px; text-wrap:pretty;">{{ art.observation }}</div>
+        <label style="font-size:12px; color:#8a877e; display:block; margin-bottom:6px;">Discuss with your partner, then write your answer here.</label>
+        <input value="{{ obsText }}" onInput="{{ setObs }}" placeholder="Your observation&hellip;" style="width:100%; max-width:560px; font-family:inherit; font-size:14px; color:#1b1b1a; padding:9px 12px; border:1px solid #dcdad2; border-radius:2px; background:#fff; outline:none;" />
+      </div>
+
+      <!-- zone 2: split stage -->
+      <div style="position:relative; flex:1; min-height:330px; display:flex; background:#dedcd4;">
+        <!-- left: painting -->
+        <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:repeating-linear-gradient(45deg,#e7e5dd 0 12px,#eceae3 12px 24px); display:flex; align-items:center; justify-content:center;">
+          <div style="position:absolute; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#a8a499;">Painting</div>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.05em; color:#b3afa4; text-transform:uppercase;">{{ art.title }}</span>
+        </div>
+        <!-- right: simulation -->
+        <div style="flex:1; position:relative; background:#0a1330; overflow:hidden;">
+          <div style="position:absolute; z-index:3; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,.55);">{{ rightLabel }}</div>
+          <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
+            <canvas style="position:absolute; inset:0; width:100%; height:100%; display:block;"></canvas>
+            <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:{{ compareOpacity }}; transition:opacity .18s ease; background:repeating-linear-gradient(45deg,#e7e5dd 0 12px,#eceae3 12px 24px); display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.05em; color:#8c887d; text-transform:uppercase;">{{ art.title }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notFlow }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; background:#15151a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:24px; text-align:center;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.1em; color:#cfcabd;">{{ art.algoLabel }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#6f6b61;">Live simulation in development</div>
+            </div>
+          </sc-if>
+        </div>
+        <!-- compare button on divider -->
+        <button onMouseDown="{{ startCompare }}" onMouseUp="{{ endCompare }}" onMouseLeave="{{ endCompare }}" onTouchStart="{{ startCompare }}" onTouchEnd="{{ endCompare }}" style="position:absolute; z-index:4; top:50%; left:50%; transform:translate(-50%,-50%); border:1px solid #c4c1b6; background:#fbfaf7; color:#1b1b1a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:8px 14px; border-radius:3px; cursor:pointer; box-shadow:0 3px 12px rgba(0,0,0,.18); user-select:none; white-space:nowrap;" style-active="background:#2f4a6b; color:#fff; border-color:#2f4a6b;">Hold to compare</button>
+      </div>
+
+      <!-- zone 3: controls -->
+      <div style="position:relative; display:flex; gap:28px; padding:22px 24px 24px; border-top:1px solid #dcdad2; background:#fbfaf7;">
+        <!-- left: controls -->
+        <div style="flex:1; min-width:0;">
+          <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px 32px; max-width:620px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:13px; font-weight:500;">Noise scale</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#2f4a6b;">{{ noiseScaleStr }}</span></div>
+                <input type="range" min="0.5" max="8" step="0.1" value="{{ params.noiseScale }}" onInput="{{ setNoiseScale }}" style="width:100%; margin-top:8px;" />
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#a8a499; margin-top:5px;">spatial frequency of the field</div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:13px; font-weight:500;">Particle speed</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#2f4a6b;">{{ speedStr }}</span></div>
+                <input type="range" min="0.2" max="4" step="0.1" value="{{ params.speed }}" onInput="{{ setSpeed }}" style="width:100%; margin-top:8px;" />
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#a8a499; margin-top:5px;">step length per frame</div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:13px; font-weight:500;">Trail length</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#2f4a6b;">{{ trailStr }}</span></div>
+                <input type="range" min="0.5" max="0.99" step="0.01" value="{{ params.trailLength }}" onInput="{{ setTrail }}" style="width:100%; margin-top:8px;" />
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#a8a499; margin-top:5px;">how long strokes persist</div>
+              </div>
+              <div>
+                <div style="font-size:13px; font-weight:500;">Colour palette</div>
+                <div style="display:flex; gap:8px; margin-top:9px; flex-wrap:wrap;">
+                  <sc-for list="{{ paletteOptions }}" as="p" hint-placeholder-count="3">
+                    <button onClick="{{ p.select }}" style="{{ p.style }}">{{ p.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notFlow }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width:560px;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#9a968c;">{{ art.algoCode }} controls</div>
+              <p style="font-size:14px; line-height:1.6; color:#6b685f; margin:8px 0 0;">{{ art.stubText }}</p>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- right: presets, log, lock-in -->
+        <div style="width:300px; flex:0 0 300px; display:flex; flex-direction:column; gap:16px;">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#9a968c;">Presets</div>
+            <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:9px;">
+                <sc-for list="{{ presets }}" as="pr" hint-placeholder-count="4">
+                  <button onClick="{{ pr.apply }}" style="font-family:inherit; font-size:13px; text-align:left; padding:8px 10px; border:1px solid #dcdad2; background:#fff; color:#3a3833; border-radius:2px; cursor:pointer;" style-hover="border-color:#2f4a6b; color:#2f4a6b;">{{ pr.name }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notFlow }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:9px;">
+                <sc-for list="{{ presets }}" as="pr" hint-placeholder-count="4">
+                  <div style="font-size:13px; padding:8px 10px; border:1px dashed #d2cfc5; background:transparent; color:#b3afa4; border-radius:2px;">{{ pr.name }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#9a968c;">Parameters</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; background:#f1efe9; border:1px solid #dcdad2; padding:10px 12px; margin-top:9px; border-radius:2px;">
+              <sc-for list="{{ paramLog }}" as="l" hint-placeholder-count="5">
+                <div style="display:flex; justify-content:space-between; gap:12px; padding:2px 0; color:#8a877e;"><span>{{ l.k }}</span><span style="color:#1b1b1a;">{{ l.v }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+
+          <button onClick="{{ lockIn }}" style="margin-top:4px; background:#1b1b1a; color:#fff; border:none; padding:15px 16px; font-family:inherit; font-size:15px; font-weight:500; border-radius:2px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;" style-hover="background:#000;">This is my reading <span style="font-size:17px;">&rarr;</span></button>
+        </div>
+
+        <!-- lock sheet -->
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; background:rgba(251,250,247,.74); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.06em; color:#8a877e; border:1px solid #dcdad2; background:#fff; padding:10px 16px; border-radius:3px;">{{ lockNote }}</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== REVEAL ===== -->
+  <sc-if value="{{ isReveal }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1; position:relative; display:flex; flex-direction:column; align-items:center; overflow:auto; background:#e6e4dd;">
+      <button onClick="{{ goGallery }}" style="position:absolute; z-index:5; top:16px; right:20px; border:1px solid #c4c1b6; background:#fbfaf7; color:#3a3833; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 12px; border-radius:3px; cursor:pointer;" style-hover="background:#f0eee8;">&#8592; Gallery</button>
+
+      <div style="width:min(720px,86vw); aspect-ratio:4/3; position:relative; margin-top:44px; box-shadow:0 22px 60px rgba(0,0,0,.20); background:repeating-linear-gradient(45deg,#e7e5dd 0 13px,#eceae3 13px 26px); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.06em; color:#b3afa4; text-transform:uppercase;">{{ art.title }}</span>
+        <sc-if value="{{ revealIsFlow }}" hint-placeholder-val="{{ false }}">
+          <canvas style="position:absolute; inset:0; width:100%; height:100%; display:block; opacity:{{ overlayOpacity }}; transition:{{ overlayTransition }};"></canvas>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ revealIsFlow }}" hint-placeholder-val="{{ false }}">
+        <div style="width:min(720px,86vw); display:flex; align-items:center; gap:14px; margin-top:16px;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8a877e;">OVERLAY</span>
+          <input type="range" min="0" max="100" value="{{ overlayPct }}" onInput="{{ setOverlay }}" style="flex:1;" />
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#2f4a6b; width:34px; text-align:right;">{{ overlayPct }}</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ revealStep1 }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ revealNow }}" style="margin-top:22px; border:1px solid #1b1b1a; background:transparent; color:#1b1b1a; font-family:inherit; font-size:14px; font-weight:500; padding:11px 18px; border-radius:2px; cursor:pointer;" style-hover="background:#1b1b1a; color:#fff;">Reveal the algorithm &darr;</button>
+      </sc-if>
+
+      <sc-if value="{{ revealCardShown }}" hint-placeholder-val="{{ false }}">
+        <div style="width:min(720px,86vw); margin:28px 0 0; background:#fbfaf7; border:1px solid #dcdad2; border-radius:3px; padding:26px 28px; animation:cardUp .6s cubic-bezier(.2,.7,.2,1) both;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#2f4a6b;">Algorithm &middot; {{ art.algoCode }}</div>
+          <h2 style="font-size:24px; font-weight:600; margin:8px 0 14px; letter-spacing:-0.01em;">{{ art.algoName }}</h2>
+          <p style="font-size:15px; line-height:1.6; color:#3a3833; margin:0;">{{ art.context }}</p>
+          <p style="font-size:15px; line-height:1.6; color:#2f4a6b; margin:12px 0 0;">{{ art.connection }}</p>
+        </div>
+        <div style="width:min(720px,86vw); margin:22px 0 56px; border-top:1px solid #cfccc2; padding-top:22px; animation:cardUp .6s cubic-bezier(.2,.7,.2,1) .12s both;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#9a968c;">Discuss</div>
+          <p style="font-size:19px; font-weight:500; line-height:1.5; margin:8px 0 0; text-wrap:pretty;">{{ art.discussion }}</p>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;revealAutoDelay&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:0,&quot;max&quot;:20},&quot;promptDelay&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:2.5,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:0,&quot;max&quot;:8,&quot;step&quot;:0.5}}">
+class Component extends DCLogic {
+  state = { screen:'gallery', currentId:null, obsText:'', promptReady:false, comparing:false, params:null, revealStep:1, overlayOpacity:0, overlayTouched:false };
+
+  PALETTES = {
+    starlight:{ bg:'#0a1330', colors:['#f6d365','#fae6a0','#cfe0ff','#7aa6e8','#e9f1ff'] },
+    nocturne: { bg:'#060c1f', colors:['#8fb4ff','#5d7fc4','#bcd2ff','#3f5a99','#dfe9ff'] },
+    cinder:   { bg:'#160a04', colors:['#ffd27a','#ff9a4d','#e7651f','#ffb968','#fff0d6'] },
+    ember:    { bg:'#170a03', colors:['#ff8a3d','#ffd24a','#e8521f','#ffb36b','#ffe6b0'] },
+    ash:      { bg:'#101012', colors:['#d8d2c8','#9a948a','#efeae0','#736d63','#bdb6aa'] },
+    fjord:    { bg:'#04120f', colors:['#7fe0c0','#3fb89a','#bdeede','#2a8f74','#e6fff6'] }
+  };
+  PALETTE_LABELS = { starlight:'Starlight', nocturne:'Nocturne', cinder:'Cinder', ember:'Ember', ash:'Ash', fjord:'Fjord' };
+
+  ARTS = [
+    { id:'starry', title:'The Starry Night', artist:'Vincent van Gogh', date:'1889', type:'flowfield', difficulty:'Observable',
+      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field \u00b7 Perlin noise',
+      observation:'Where does your eye move first, and why do you think it goes there?',
+      context:'A flow field assigns a direction to every point in space; particles released into it trace the currents. The same mathematics describes turbulence, wind, and the swirl of fluids. Van Gogh painted these eddies decades before the theory of turbulence was written down.',
+      connection:'The spirals above the village obey the same rule a physicist would use to sketch a vortex \u2014 Van Gogh saw the structure without the equation.',
+      discussion:'Van Gogh saw turbulence the eye can follow; the algorithm only ever computes the next step. Which one understands the sky?',
+      palettes:['starlight','nocturne','cinder'],
+      paramDefaults:{ noiseScale:2.0, speed:1.1, trailLength:0.94, palette:'starlight' },
+      presets:[
+        { name:'Gentle drift', noiseScale:1.2, speed:0.6, trailLength:0.97, palette:'starlight' },
+        { name:'Tempest', noiseScale:3.6, speed:2.4, trailLength:0.90, palette:'nocturne' },
+        { name:'Before the storm', noiseScale:2.0, speed:1.1, trailLength:0.94, palette:'starlight' },
+        { name:'Kolmogorov', noiseScale:5.4, speed:1.6, trailLength:0.88, palette:'cinder' }
+      ] },
+    { id:'scream', title:'The Scream', artist:'Edvard Munch', date:'1893', type:'flowfield', difficulty:'Arguable',
+      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field \u00b7 Perlin noise',
+      observation:'The sky and the water seem to move. Trace the direction they flow \u2014 where do the bands lead your eye?',
+      context:'The undulating bands of the sky and fjord behave like a flow field \u2014 a continuous direction map that bends everything passing through it into a single, anxious current.',
+      connection:'Munch wrote that he felt "an infinite scream passing through nature." A flow field is exactly that: one rule, felt everywhere at once, dragging the whole scene along with it.',
+      discussion:'If the background of The Scream can be generated by a flow field algorithm, does that change what you think Munch was responding to when he painted it?',
+      palettes:['ember','cinder','ash'],
+      paramDefaults:{ noiseScale:2.4, speed:1.4, trailLength:0.93, palette:'ember' },
+      presets:[
+        { name:'The cry', noiseScale:2.4, speed:1.4, trailLength:0.93, palette:'ember' },
+        { name:'Anxious sky', noiseScale:3.4, speed:2.1, trailLength:0.90, palette:'ember' },
+        { name:'Undertow', noiseScale:1.5, speed:0.8, trailLength:0.96, palette:'cinder' },
+        { name:'Long wave', noiseScale:4.6, speed:1.2, trailLength:0.88, palette:'ash' }
+      ] },
+    { id:'hiroshige', title:'Plum Park in Kameido', artist:'Utagawa Hiroshige', date:'1857', type:'lsystem', difficulty:'Arguable',
+      algoCode:'L-SYSTEM', algoName:'L-systems (Lindenmayer systems)', algoLabel:'L-system \u00b7 grammar editor',
+      observation:'Follow a single branch from the trunk to its tip. How many times does it split, and does it split the same way each time?',
+      context:'An L-system grows a structure by repeatedly rewriting a string of symbols, each pass adding detail. Lindenmayer devised them in 1968 to model how plants branch: a few rules, applied again and again, produce a whole tree.',
+      connection:'The branching of the plum tree follows the same logic as the grammar \u2014 one simple rewrite rule, iterated until it looks unmistakably alive.',
+      discussion:'If a handful of rules can grow a believable tree, what was Hiroshige doing that the rules are not?',
+      stubText:'A preset selector \u2014 Sparse branch, Dense canopy, Geometric, Asymmetric \u2014 plus an editable rule string you can modify, and a reset button to recover the preset. Live grammar editor in development.',
+      presets:[{name:'Sparse branch'},{name:'Dense canopy'},{name:'Geometric'},{name:'Asymmetric'}] },
+    { id:'conesnail', title:'Cone Snail Shell', artist:'Conus textile \u00b7 nature', date:'\u2014', type:'rule30', difficulty:'Open',
+      algoCode:'RULE-30', algoName:'Rule 30 (cellular automata)', algoLabel:'Rule 30 \u00b7 cellular automaton',
+      observation:'The pattern looks random, yet it never quite repeats and never falls apart. Is it random, or is something controlling it?',
+      context:'Rule 30 is a one-dimensional cellular automaton: each cell\u2019s next state depends only on itself and its two neighbours. From a single starting cell it produces patterns indistinguishable from random \u2014 yet entirely deterministic.',
+      connection:'In 1952, two years before his death, Alan Turing described how such reaction\u2013diffusion rules could paint an animal\u2019s coat. The cone snail runs this computation in its own pigment cells \u2014 biology confirmed it half a century later.',
+      discussion:'The snail is not following Turing\u2019s paper. So in what sense is it \u201ccomputing\u201d anything at all?',
+      stubText:'The simplest controls of the set \u2014 just the starting seed pattern and the colour map. The algorithm itself is fixed; the point is how little you must specify to get complex output. Live simulation in development.',
+      presets:[{name:'Single seed'},{name:'Twin seed'},{name:'Scatter'}] },
+    { id:'seurat', title:'A Sunday on La Grande Jatte', artist:'Georges Seurat', date:'1884\u201386', type:'voronoi', difficulty:'Arguable',
+      algoCode:'VORONOI', algoName:'Voronoi stippling', algoLabel:'Voronoi stippling',
+      observation:'Step back in your mind\u2019s eye. The image is built from countless separate dots \u2014 how evenly are they spaced, and who decided where each one goes?',
+      context:'A Voronoi diagram partitions space into regions, one per seed point, each region nearest its seed. Relax the seeds toward the centre of their regions and the points settle into an even, organic stipple \u2014 the way a printer turns a photograph into dots.',
+      connection:'Seurat placed thousands of discrete points so the eye would blend them; the algorithm distributes its points by the same principle of even, optimal spacing.',
+      discussion:'Pointillism and the algorithm both build an image from points the eye fuses. Is that a coincidence, or did Seurat discover something the mathematics only later named?',
+      stubText:'Seed point count, relaxation iterations, and a colour sampling mode \u2014 exact (sampled from the painting), impressionist (with variance), or monochrome. The colour tie to the painting itself is what makes this one special. Live stippling in development.',
+      presets:[{name:'Sparse points'},{name:'Dense field'},{name:'Pure colour'}] },
+    { id:'harmonograph', title:'Harmonograph Figure', artist:'Pendulum machine', date:'c. 1900', type:'attractor', difficulty:'Open',
+      algoCode:'ROSSLER', algoName:'The R\u00f6ssler attractor', algoLabel:'Strange attractor \u00b7 R\u00f6ssler',
+      observation:'A machine drew this with no hand guiding it. Does the line look designed to you, or does it look found?',
+      context:'A strange attractor is the shape traced by a system that never repeats yet never escapes a bounded region. The R\u00f6ssler attractor, from just three simple equations, folds a single line into an infinitely intricate orbit.',
+      connection:'A harmonograph \u2014 pendulums drawing with a pen \u2014 traces decaying orbits much like an attractor\u2019s. Neither the pendulum nor the equation intends the figure; it falls out of the dynamics.',
+      discussion:'The machine that made this had no intention. Does that matter?',
+      stubText:'Sliders for the three parameters, labelled plainly \u2014 curve tightness, loop depth, spread (a, b, c underneath for the curious) \u2014 plus rotation speed and trail fade. Live attractor in development.',
+      presets:[{name:'Tight coil'},{name:'Open orbit'},{name:'Drift'},{name:'Chaos'}] }
+  ];
+
+  getArtworks(){ return this.ARTS; }
+  artById(id){ return this.ARTS.find(a => a.id === id) || null; }
+
+  // ---------- navigation ----------
+  openDetective(id){
+    const art = this.artById(id);
+    clearTimeout(this._pt); clearTimeout(this._rt);
+    this.setState({ screen:'detective', currentId:id, obsText:'', promptReady:false, comparing:false,
+      params: art && art.type === 'flowfield' ? { ...art.paramDefaults } : null, revealStep:1 });
+    const delay = (this.props.promptDelay != null ? this.props.promptDelay : 2.5) * 1000;
+    this._pt = setTimeout(() => { if (this.state.currentId === id) this.setState({ promptReady:true }); }, delay);
+  }
+  goGallery = () => { clearTimeout(this._pt); clearTimeout(this._rt); this.setState({ screen:'gallery', currentId:null }); };
+  lockIn = () => {
+    clearTimeout(this._rt);
+    this.setState({ screen:'reveal', revealStep:1, overlayOpacity:0, overlayTouched:false });
+    setTimeout(() => { if (this.state.screen === 'reveal') this.setState({ overlayOpacity:0.5 }); }, 80);
+    const d = (this.props.revealAutoDelay != null ? this.props.revealAutoDelay : 5) * 1000;
+    this._rt = setTimeout(() => { if (this.state.screen === 'reveal' && this.state.revealStep === 1) this.setState({ revealStep:2 }); }, d);
+  };
+  revealNow = () => { clearTimeout(this._rt); this.setState({ revealStep:2 }); };
+
+  // ---------- controls ----------
+  setObs = (e) => this.setState({ obsText: e.target.value });
+  setNoiseScale = (e) => this.setState(s => ({ params:{ ...s.params, noiseScale:+e.target.value } }));
+  setSpeed = (e) => this.setState(s => ({ params:{ ...s.params, speed:+e.target.value } }));
+  setTrail = (e) => this.setState(s => ({ params:{ ...s.params, trailLength:+e.target.value } }));
+  setPalette(k){ this.setState(s => ({ params:{ ...s.params, palette:k } })); }
+  applyPreset(p){ this.setState(s => ({ params:{ ...s.params, noiseScale:p.noiseScale, speed:p.speed, trailLength:p.trailLength, palette:p.palette } })); if (this._sim) this._sim.needClear = true; }
+  startCompare = () => this.setState({ comparing:true });
+  endCompare = () => this.setState({ comparing:false });
+  setOverlay = (e) => this.setState({ overlayOpacity:(+e.target.value)/100, overlayTouched:true });
+
+  // ---------- flow field engine ----------
+  getPalette(){ const k = this.state.params && this.state.params.palette; return this.PALETTES[k] || this.PALETTES.starlight; }
+  hexToRgba(hex, a){ const n = parseInt(hex.replace('#',''),16); return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')'; }
+
+  makeNoise(seed){
+    const perm = new Uint8Array(512); const p = [];
+    for (let i=0;i<256;i++) p[i]=i;
+    let s = seed || 1; const rnd = () => { s = (s*16807) % 2147483647; return s/2147483647; };
+    for (let i=255;i>0;i--){ const j = Math.floor(rnd()*(i+1)); const t=p[i]; p[i]=p[j]; p[j]=t; }
+    for (let i=0;i<512;i++) perm[i]=p[i&255];
+    const fade = t => t*t*t*(t*(t*6-15)+10);
+    const lerp = (a,b,t) => a + t*(b-a);
+    const grad = (h,x,y) => ((h&1)?-x:x) + ((h&2)?-y:y);
+    return (x,y) => {
+      const X = Math.floor(x)&255, Y = Math.floor(y)&255;
+      const xf = x-Math.floor(x), yf = y-Math.floor(y);
+      const u = fade(xf), v = fade(yf);
+      const aa = perm[perm[X]+Y], ab = perm[perm[X]+Y+1], ba = perm[perm[X+1]+Y], bb = perm[perm[X+1]+Y+1];
+      const x1 = lerp(grad(aa,xf,yf), grad(ba,xf-1,yf), u);
+      const x2 = lerp(grad(ab,xf,yf-1), grad(bb,xf-1,yf-1), u);
+      return lerp(x1,x2,v);
+    };
+  }
+
+  // Persistent supervisor loop. Independent of React refs/lifecycle (neither fires
+  // reliably in this runtime): every frame it binds the engine to whatever flow
+  // canvas is currently on screen, fits it, and advances one step.
+  // Boots the engine heartbeat once. requestAnimationFrame gives smooth motion in a
+  // visible browser; the setInterval runs in lockstep as a fallback for contexts that
+  // throttle rAF. Both call masterTick, which is idempotent per frame.
+  ensureLoop(){
+    if (this._hb) return;
+    let last = 0;
+    const tick = () => { try { this.masterTick(); } catch(e){} };
+    this._hb = setInterval(tick, 33);
+    const raf = () => { tick(); this._rafId = requestAnimationFrame(raf); };
+    this._rafId = requestAnimationFrame(raf);
+  }
+  isFlowCurrent(){ const a = this.artById(this.state.currentId); return !!a && a.type === 'flowfield'; }
+  masterTick(){
+    const now = Date.now();
+    if (now - (this._lastStep || 0) < 28) return;   // throttle to ~33fps regardless of pump
+    this._lastStep = now;
+    const s = this.state;
+    const onFlow = (s.screen === 'detective' || s.screen === 'reveal') && this.isFlowCurrent();
+    const cv = onFlow ? document.querySelector('canvas') : null;
+    if (onFlow && cv){
+      if (!this._sim || this._sim.canvas !== cv) this.bindSim(cv);
+      this.fitSim();
+      this.stepSim();
+    } else if (this._sim){
+      this._sim = null;
+    }
+  }
+  bindSim(canvas){
+    this._sim = { canvas, ctx:canvas.getContext('2d'), noise:this.makeNoise(1337), parts:[], w:0, h:0, needClear:true, palKey:null };
+  }
+  fitSim(){
+    const sim = this._sim; if (!sim) return;
+    const w = sim.canvas.clientWidth || 600, h = sim.canvas.clientHeight || 480;
+    if (w !== sim.w || h !== sim.h){
+      sim.canvas.width = w; sim.canvas.height = h; sim.w = w; sim.h = h;
+      this.initParts(); sim.needClear = true;
+    }
+  }
+
+  initParts(){
+    const sim = this._sim; if (!sim) return;
+    const pal = this.getPalette();
+    const count = Math.max(300, Math.min(2400, Math.round(sim.w*sim.h/520)));
+    const a = [];
+    for (let i=0;i<count;i++){
+      const x = Math.random()*sim.w, y = Math.random()*sim.h;
+      a.push({ x, y, px:x, py:y, life:(Math.random()*200)|0, c:pal.colors[(Math.random()*pal.colors.length)|0] });
+    }
+    sim.parts = a;
+  }
+
+  stepSim(){
+    const sim = this._sim; if (!sim) return;
+    const ctx = sim.ctx, pal = this.getPalette(), pm = this.state.params;
+    if (!pm) return;
+    if (sim.needClear || sim.palKey !== pm.palette){
+      ctx.fillStyle = pal.bg; ctx.fillRect(0,0,sim.w,sim.h);
+      sim.needClear = false; sim.palKey = pm.palette;
+      for (const p of sim.parts) p.c = pal.colors[(Math.random()*pal.colors.length)|0];
+    } else {
+      ctx.fillStyle = this.hexToRgba(pal.bg, 0.30*(1-pm.trailLength)+0.006);
+      ctx.fillRect(0,0,sim.w,sim.h);
+    }
+    const freq = pm.noiseScale*0.0015, step = pm.speed*1.1+0.25;
+    ctx.lineWidth = 1.1; ctx.globalAlpha = 0.85;
+    for (const p of sim.parts){
+      const ang = sim.noise(p.x*freq, p.y*freq)*Math.PI*3;
+      p.px = p.x; p.py = p.y;
+      p.x += Math.cos(ang)*step; p.y += Math.sin(ang)*step; p.life--;
+      if (p.life < 0 || p.x < 0 || p.x > sim.w || p.y < 0 || p.y > sim.h){
+        p.x = Math.random()*sim.w; p.y = Math.random()*sim.h; p.px = p.x; p.py = p.y;
+        p.life = (80 + Math.random()*180)|0; p.c = pal.colors[(Math.random()*pal.colors.length)|0];
+        continue;
+      }
+      ctx.strokeStyle = p.c;
+      ctx.beginPath(); ctx.moveTo(p.px,p.py); ctx.lineTo(p.x,p.y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  componentWillUnmount(){ clearInterval(this._hb); this._sim = null; clearTimeout(this._pt); clearTimeout(this._rt); }
+
+  segStyle(active){
+    return { fontFamily:"'IBM Plex Mono',monospace", fontSize:'12px', padding:'7px 11px', cursor:'pointer',
+      border:'1px solid ' + (active ? '#2f4a6b' : '#dcdad2'), background: active ? '#eaf0f7' : '#fff',
+      color: active ? '#2f4a6b' : '#5c5a52', borderRadius:'2px' };
+  }
+
+  renderVals(){
+    this.ensureLoop();
+    const s = this.state;
+    const art = this.artById(s.currentId);
+    const isFlow = !!art && art.type === 'flowfield';
+    const pm = s.params || {};
+    const unlocked = s.promptReady && (s.obsText || '').trim().length >= 5;
+
+    const galleryItems = this.ARTS.map(a => ({
+      id:a.id, title:a.title, artist:a.artist, date:a.date, difficulty:a.difficulty,
+      open: () => this.openDetective(a.id)
+    }));
+
+    const paletteOptions = isFlow ? art.palettes.map(k => ({
+      key:k, label:this.PALETTE_LABELS[k], select:() => this.setPalette(k), style:this.segStyle(pm.palette === k)
+    })) : [];
+
+    const presets = (art ? art.presets : []).map(p => ({
+      name:p.name, apply: isFlow ? () => this.applyPreset(p) : () => {}
+    }));
+
+    let paramLog = [];
+    if (isFlow){
+      paramLog = [
+        { k:'algorithm', v:art.algoCode },
+        { k:'noise_scale', v:(+pm.noiseScale||0).toFixed(1) },
+        { k:'speed', v:(+pm.speed||0).toFixed(1) },
+        { k:'trail', v:(+pm.trailLength||0).toFixed(2) },
+        { k:'palette', v:pm.palette || '\u2014' }
+      ];
+    } else if (art){
+      paramLog = [ { k:'algorithm', v:art.algoCode }, { k:'status', v:'in development' } ];
+    }
+
+    return {
+      isGallery: s.screen === 'gallery',
+      isDetective: s.screen === 'detective',
+      isReveal: s.screen === 'reveal',
+      notGallery: s.screen !== 'gallery',
+      galleryItems, art: art || {}, isFlow, notFlow: !!art && !isFlow,
+      rightLabel: isFlow ? 'Simulation' : (art ? art.algoCode : ''),
+      obsText: s.obsText, setObs:this.setObs,
+      locked: !unlocked,
+      lockNote: s.promptReady ? 'Answer the question above to unlock the controls.' : 'Read the prompt\u2026',
+      noiseScaleStr:(+pm.noiseScale||0).toFixed(1), speedStr:(+pm.speed||0).toFixed(1), trailStr:(+pm.trailLength||0).toFixed(2),
+      setNoiseScale:this.setNoiseScale, setSpeed:this.setSpeed, setTrail:this.setTrail,
+      paletteOptions, presets, paramLog, params: pm,
+      compareOpacity: s.comparing ? 0.55 : 0, startCompare:this.startCompare, endCompare:this.endCompare,
+      lockIn:this.lockIn,
+      revealIsFlow:isFlow, revealStep1: s.revealStep === 1, revealCardShown: s.revealStep >= 2,
+      overlayOpacity: s.overlayOpacity, overlayPct: Math.round(s.overlayOpacity*100),
+      overlayTransition: s.overlayTouched ? 'opacity .05s linear' : 'opacity 1.6s ease',
+      setOverlay:this.setOverlay, revealNow:this.revealNow, goGallery:this.goGallery
+    };
+  }
+}
+</script>
+</body>
+</html>
