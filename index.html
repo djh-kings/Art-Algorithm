@@ -75,7 +75,7 @@
       </div>
 
       <!-- zone 2: split stage -->
-      <div style="position:relative; flex:1; min-height:330px; display:flex; background:#dedcd4;">
+      <div style="flex:1; min-height:330px; display:flex; background:#dedcd4;">
         <!-- left: painting -->
         <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:repeating-linear-gradient(45deg,#e7e5dd 0 12px,#eceae3 12px 24px); display:flex; align-items:center; justify-content:center;">
           <div style="position:absolute; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#a8a499;">Painting</div>
@@ -97,8 +97,11 @@
             </div>
           </sc-if>
         </div>
-        <!-- compare button on divider -->
-        <button onMouseDown="{{ startCompare }}" onMouseUp="{{ endCompare }}" onMouseLeave="{{ endCompare }}" onTouchStart="{{ startCompare }}" onTouchEnd="{{ endCompare }}" style="position:absolute; z-index:4; top:50%; left:50%; transform:translate(-50%,-50%); border:1px solid #c4c1b6; background:#fbfaf7; color:#1b1b1a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:8px 14px; border-radius:3px; cursor:pointer; box-shadow:0 3px 12px rgba(0,0,0,.18); user-select:none; white-space:nowrap;" style-active="background:#2f4a6b; color:#fff; border-color:#2f4a6b;">Hold to compare</button>
+      </div>
+
+      <!-- compare strip -->
+      <div style="display:flex; justify-content:center; align-items:center; padding:8px 0; border-top:1px solid #dcdad2; border-bottom:1px solid #dcdad2; background:#f4f3ef;">
+        <button onMouseDown="{{ startCompare }}" onMouseUp="{{ endCompare }}" onMouseLeave="{{ endCompare }}" onTouchStart="{{ startCompare }}" onTouchEnd="{{ endCompare }}" style="border:1px solid #c4c1b6; background:#fbfaf7; color:#1b1b1a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:7px 16px; border-radius:2px; cursor:pointer; user-select:none; white-space:nowrap;" style-active="background:#2f4a6b; color:#fff; border-color:#2f4a6b;">Hold to compare</button>
       </div>
 
       <!-- zone 3: controls -->
@@ -239,10 +242,10 @@ class Component extends DCLogic {
 
   ARTS = [
     { id:'starry', title:'The Starry Night', artist:'Vincent van Gogh', date:'1889', type:'flowfield', difficulty:'Observable',
-      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field \u00b7 Perlin noise',
+      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field · Perlin noise',
       observation:'Where does your eye move first, and why do you think it goes there?',
       context:'A flow field assigns a direction to every point in space; particles released into it trace the currents. The same mathematics describes turbulence, wind, and the swirl of fluids. Van Gogh painted these eddies decades before the theory of turbulence was written down.',
-      connection:'The spirals above the village obey the same rule a physicist would use to sketch a vortex \u2014 Van Gogh saw the structure without the equation.',
+      connection:'The spirals above the village obey the same rule a physicist would use to sketch a vortex — Van Gogh saw the structure without the equation.',
       discussion:'Van Gogh saw turbulence the eye can follow; the algorithm only ever computes the next step. Which one understands the sky?',
       palettes:['starlight','nocturne','cinder'],
       paramDefaults:{ noiseScale:2.0, speed:1.1, trailLength:0.94, palette:'starlight' },
@@ -253,9 +256,9 @@ class Component extends DCLogic {
         { name:'Kolmogorov', noiseScale:5.4, speed:1.6, trailLength:0.88, palette:'cinder' }
       ] },
     { id:'scream', title:'The Scream', artist:'Edvard Munch', date:'1893', type:'flowfield', difficulty:'Arguable',
-      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field \u00b7 Perlin noise',
-      observation:'The sky and the water seem to move. Trace the direction they flow \u2014 where do the bands lead your eye?',
-      context:'The undulating bands of the sky and fjord behave like a flow field \u2014 a continuous direction map that bends everything passing through it into a single, anxious current.',
+      algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field · Perlin noise',
+      observation:'The sky and the water seem to move. Trace the direction they flow — where do the bands lead your eye?',
+      context:'The undulating bands of the sky and fjord behave like a flow field — a continuous direction map that bends everything passing through it into a single, anxious current.',
       connection:'Munch wrote that he felt "an infinite scream passing through nature." A flow field is exactly that: one rule, felt everywhere at once, dragging the whole scene along with it.',
       discussion:'If the background of The Scream can be generated by a flow field algorithm, does that change what you think Munch was responding to when he painted it?',
       palettes:['ember','cinder','ash'],
@@ -267,36 +270,36 @@ class Component extends DCLogic {
         { name:'Long wave', noiseScale:4.6, speed:1.2, trailLength:0.88, palette:'ash' }
       ] },
     { id:'hiroshige', title:'Plum Park in Kameido', artist:'Utagawa Hiroshige', date:'1857', type:'lsystem', difficulty:'Arguable',
-      algoCode:'L-SYSTEM', algoName:'L-systems (Lindenmayer systems)', algoLabel:'L-system \u00b7 grammar editor',
+      algoCode:'L-SYSTEM', algoName:'L-systems (Lindenmayer systems)', algoLabel:'L-system · grammar editor',
       observation:'Follow a single branch from the trunk to its tip. How many times does it split, and does it split the same way each time?',
       context:'An L-system grows a structure by repeatedly rewriting a string of symbols, each pass adding detail. Lindenmayer devised them in 1968 to model how plants branch: a few rules, applied again and again, produce a whole tree.',
-      connection:'The branching of the plum tree follows the same logic as the grammar \u2014 one simple rewrite rule, iterated until it looks unmistakably alive.',
+      connection:'The branching of the plum tree follows the same logic as the grammar — one simple rewrite rule, iterated until it looks unmistakably alive.',
       discussion:'If a handful of rules can grow a believable tree, what was Hiroshige doing that the rules are not?',
-      stubText:'A preset selector \u2014 Sparse branch, Dense canopy, Geometric, Asymmetric \u2014 plus an editable rule string you can modify, and a reset button to recover the preset. Live grammar editor in development.',
+      stubText:'A preset selector — Sparse branch, Dense canopy, Geometric, Asymmetric — plus an editable rule string you can modify, and a reset button to recover the preset. Live grammar editor in development.',
       presets:[{name:'Sparse branch'},{name:'Dense canopy'},{name:'Geometric'},{name:'Asymmetric'}] },
-    { id:'conesnail', title:'Cone Snail Shell', artist:'Conus textile \u00b7 nature', date:'\u2014', type:'rule30', difficulty:'Open',
-      algoCode:'RULE-30', algoName:'Rule 30 (cellular automata)', algoLabel:'Rule 30 \u00b7 cellular automaton',
+    { id:'conesnail', title:'Cone Snail Shell', artist:'Conus textile · nature', date:'—', type:'rule30', difficulty:'Open',
+      algoCode:'RULE-30', algoName:'Rule 30 (cellular automata)', algoLabel:'Rule 30 · cellular automaton',
       observation:'The pattern looks random, yet it never quite repeats and never falls apart. Is it random, or is something controlling it?',
-      context:'Rule 30 is a one-dimensional cellular automaton: each cell\u2019s next state depends only on itself and its two neighbours. From a single starting cell it produces patterns indistinguishable from random \u2014 yet entirely deterministic.',
-      connection:'In 1952, two years before his death, Alan Turing described how such reaction\u2013diffusion rules could paint an animal\u2019s coat. The cone snail runs this computation in its own pigment cells \u2014 biology confirmed it half a century later.',
-      discussion:'The snail is not following Turing\u2019s paper. So in what sense is it \u201ccomputing\u201d anything at all?',
-      stubText:'The simplest controls of the set \u2014 just the starting seed pattern and the colour map. The algorithm itself is fixed; the point is how little you must specify to get complex output. Live simulation in development.',
+      context:'Rule 30 is a one-dimensional cellular automaton: each cell’s next state depends only on itself and its two neighbours. From a single starting cell it produces patterns indistinguishable from random — yet entirely deterministic.',
+      connection:'In 1952, two years before his death, Alan Turing described how such reaction–diffusion rules could paint an animal’s coat. The cone snail runs this computation in its own pigment cells — biology confirmed it half a century later.',
+      discussion:'The snail is not following Turing’s paper. So in what sense is it “computing” anything at all?',
+      stubText:'The simplest controls of the set — just the starting seed pattern and the colour map. The algorithm itself is fixed; the point is how little you must specify to get complex output. Live simulation in development.',
       presets:[{name:'Single seed'},{name:'Twin seed'},{name:'Scatter'}] },
-    { id:'seurat', title:'A Sunday on La Grande Jatte', artist:'Georges Seurat', date:'1884\u201386', type:'voronoi', difficulty:'Arguable',
+    { id:'seurat', title:'A Sunday on La Grande Jatte', artist:'Georges Seurat', date:'1884–86', type:'voronoi', difficulty:'Arguable',
       algoCode:'VORONOI', algoName:'Voronoi stippling', algoLabel:'Voronoi stippling',
-      observation:'Step back in your mind\u2019s eye. The image is built from countless separate dots \u2014 how evenly are they spaced, and who decided where each one goes?',
-      context:'A Voronoi diagram partitions space into regions, one per seed point, each region nearest its seed. Relax the seeds toward the centre of their regions and the points settle into an even, organic stipple \u2014 the way a printer turns a photograph into dots.',
+      observation:'Step back in your mind’s eye. The image is built from countless separate dots — how evenly are they spaced, and who decided where each one goes?',
+      context:'A Voronoi diagram partitions space into regions, one per seed point, each region nearest its seed. Relax the seeds toward the centre of their regions and the points settle into an even, organic stipple — the way a printer turns a photograph into dots.',
       connection:'Seurat placed thousands of discrete points so the eye would blend them; the algorithm distributes its points by the same principle of even, optimal spacing.',
       discussion:'Pointillism and the algorithm both build an image from points the eye fuses. Is that a coincidence, or did Seurat discover something the mathematics only later named?',
-      stubText:'Seed point count, relaxation iterations, and a colour sampling mode \u2014 exact (sampled from the painting), impressionist (with variance), or monochrome. The colour tie to the painting itself is what makes this one special. Live stippling in development.',
+      stubText:'Seed point count, relaxation iterations, and a colour sampling mode — exact (sampled from the painting), impressionist (with variance), or monochrome. The colour tie to the painting itself is what makes this one special. Live stippling in development.',
       presets:[{name:'Sparse points'},{name:'Dense field'},{name:'Pure colour'}] },
     { id:'harmonograph', title:'Harmonograph Figure', artist:'Pendulum machine', date:'c. 1900', type:'attractor', difficulty:'Open',
-      algoCode:'ROSSLER', algoName:'The R\u00f6ssler attractor', algoLabel:'Strange attractor \u00b7 R\u00f6ssler',
+      algoCode:'ROSSLER', algoName:'The Rössler attractor', algoLabel:'Strange attractor · Rössler',
       observation:'A machine drew this with no hand guiding it. Does the line look designed to you, or does it look found?',
-      context:'A strange attractor is the shape traced by a system that never repeats yet never escapes a bounded region. The R\u00f6ssler attractor, from just three simple equations, folds a single line into an infinitely intricate orbit.',
-      connection:'A harmonograph \u2014 pendulums drawing with a pen \u2014 traces decaying orbits much like an attractor\u2019s. Neither the pendulum nor the equation intends the figure; it falls out of the dynamics.',
+      context:'A strange attractor is the shape traced by a system that never repeats yet never escapes a bounded region. The Rössler attractor, from just three simple equations, folds a single line into an infinitely intricate orbit.',
+      connection:'A harmonograph — pendulums drawing with a pen — traces decaying orbits much like an attractor’s. Neither the pendulum nor the equation intends the figure; it falls out of the dynamics.',
       discussion:'The machine that made this had no intention. Does that matter?',
-      stubText:'Sliders for the three parameters, labelled plainly \u2014 curve tightness, loop depth, spread (a, b, c underneath for the curious) \u2014 plus rotation speed and trail fade. Live attractor in development.',
+      stubText:'Sliders for the three parameters, labelled plainly — curve tightness, loop depth, spread (a, b, c underneath for the curious) — plus rotation speed and trail fade. Live attractor in development.',
       presets:[{name:'Tight coil'},{name:'Open orbit'},{name:'Drift'},{name:'Chaos'}] }
   ];
 
@@ -357,12 +360,6 @@ class Component extends DCLogic {
     };
   }
 
-  // Persistent supervisor loop. Independent of React refs/lifecycle (neither fires
-  // reliably in this runtime): every frame it binds the engine to whatever flow
-  // canvas is currently on screen, fits it, and advances one step.
-  // Boots the engine heartbeat once. requestAnimationFrame gives smooth motion in a
-  // visible browser; the setInterval runs in lockstep as a fallback for contexts that
-  // throttle rAF. Both call masterTick, which is idempotent per frame.
   ensureLoop(){
     if (this._hb) return;
     let last = 0;
@@ -374,7 +371,7 @@ class Component extends DCLogic {
   isFlowCurrent(){ const a = this.artById(this.state.currentId); return !!a && a.type === 'flowfield'; }
   masterTick(){
     const now = Date.now();
-    if (now - (this._lastStep || 0) < 28) return;   // throttle to ~33fps regardless of pump
+    if (now - (this._lastStep || 0) < 28) return;
     this._lastStep = now;
     const s = this.state;
     const onFlow = (s.screen === 'detective' || s.screen === 'reveal') && this.isFlowCurrent();
@@ -476,7 +473,7 @@ class Component extends DCLogic {
         { k:'noise_scale', v:(+pm.noiseScale||0).toFixed(1) },
         { k:'speed', v:(+pm.speed||0).toFixed(1) },
         { k:'trail', v:(+pm.trailLength||0).toFixed(2) },
-        { k:'palette', v:pm.palette || '\u2014' }
+        { k:'palette', v:pm.palette || '—' }
       ];
     } else if (art){
       paramLog = [ { k:'algorithm', v:art.algoCode }, { k:'status', v:'in development' } ];
@@ -491,7 +488,7 @@ class Component extends DCLogic {
       rightLabel: isFlow ? 'Simulation' : (art ? art.algoCode : ''),
       obsText: s.obsText, setObs:this.setObs,
       locked: !unlocked,
-      lockNote: s.promptReady ? 'Answer the question above to unlock the controls.' : 'Read the prompt\u2026',
+      lockNote: s.promptReady ? 'Answer the question above to unlock the controls.' : 'Read the prompt…',
       noiseScaleStr:(+pm.noiseScale||0).toFixed(1), speedStr:(+pm.speed||0).toFixed(1), trailStr:(+pm.trailLength||0).toFixed(2),
       setNoiseScale:this.setNoiseScale, setSpeed:this.setSpeed, setTrail:this.setTrail,
       paletteOptions, presets, paramLog, params: pm,
