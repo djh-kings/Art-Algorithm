@@ -79,10 +79,10 @@
       <!-- zone 2: split stage -->
       <div style="flex:1; min-height:330px; display:flex; background:#dedcd4;">
         <!-- left: painting -->
-        <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:#d0cec6; overflow:hidden;">
+        <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:#d0cec6; overflow:hidden; display:flex; align-items:center; justify-content:center;">
           <div style="position:absolute; z-index:2; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,.8); text-shadow:0 1px 3px rgba(0,0,0,.5);">Painting</div>
           <sc-if value="{{ art.hasImg }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ art.img }}" alt="{{ art.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;" />
+            <img src="{{ art.img }}" alt="{{ art.title }}" style="width:100%; height:100%; object-fit:contain; display:block;" />
           </sc-if>
         </div>
         <!-- right: simulation -->
@@ -90,9 +90,9 @@
           <div style="position:absolute; z-index:3; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,.55);">{{ rightLabel }}</div>
           <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
             <canvas data-role="sim-canvas" style="position:absolute; inset:0; width:100%; height:100%; display:block;"></canvas>
-            <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:{{ compareOpacity }}; transition:opacity .18s ease; overflow:hidden;">
+            <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:{{ compareOpacity }}; transition:opacity .18s ease; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#d0cec6;">
               <sc-if value="{{ art.hasImg }}" hint-placeholder-val="{{ false }}">
-                <img src="{{ art.img }}" alt="{{ art.title }}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                <img src="{{ art.img }}" alt="{{ art.title }}" style="width:100%; height:100%; object-fit:contain; display:block;" />
               </sc-if>
             </div>
           </sc-if>
@@ -196,9 +196,9 @@
     <div style="flex:1; position:relative; display:flex; flex-direction:column; align-items:center; overflow:auto; background:#e6e4dd;">
       <button onClick="{{ goGallery }}" style="position:absolute; z-index:5; top:16px; right:20px; border:1px solid #c4c1b6; background:#fbfaf7; color:#3a3833; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 12px; border-radius:3px; cursor:pointer;" style-hover="background:#f0eee8;">&#8592; Gallery</button>
 
-      <div style="width:min(720px,86vw); aspect-ratio:4/3; position:relative; margin-top:44px; box-shadow:0 22px 60px rgba(0,0,0,.20); overflow:hidden; background:#d0cec6;">
+      <div style="width:min(720px,86vw); aspect-ratio:4/3; position:relative; margin-top:44px; box-shadow:0 22px 60px rgba(0,0,0,.20); overflow:hidden; background:#d0cec6; display:flex; align-items:center; justify-content:center;">
         <sc-if value="{{ art.hasImg }}" hint-placeholder-val="{{ false }}">
-          <img src="{{ art.img }}" alt="{{ art.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;" />
+          <img src="{{ art.img }}" alt="{{ art.title }}" style="width:100%; height:100%; object-fit:contain; display:block;" />
         </sc-if>
         <sc-if value="{{ revealIsFlow }}" hint-placeholder-val="{{ false }}">
           <canvas data-role="reveal-canvas" style="position:absolute; inset:0; width:100%; height:100%; display:block; opacity:{{ overlayOpacity }}; transition:{{ overlayTransition }};"></canvas>
@@ -320,7 +320,6 @@ class Component extends DCLogic {
   getArtworks(){ return this.ARTS; }
   artById(id){ return this.ARTS.find(a => a.id === id) || null; }
 
-  // ---------- navigation ----------
   openDetective(id){
     const art = this.artById(id);
     clearTimeout(this._pt); clearTimeout(this._rt);
@@ -339,7 +338,6 @@ class Component extends DCLogic {
   };
   revealNow = () => { clearTimeout(this._rt); this.setState({ revealStep:2 }); };
 
-  // ---------- controls ----------
   setObs = (e) => this.setState({ obsText: e.target.value });
   setNoiseScale = (e) => this.setState(s => ({ params:{ ...s.params, noiseScale:+e.target.value } }));
   setSpeed = (e) => this.setState(s => ({ params:{ ...s.params, speed:+e.target.value } }));
@@ -350,7 +348,6 @@ class Component extends DCLogic {
   endCompare = () => this.setState({ comparing:false });
   setOverlay = (e) => this.setState({ overlayOpacity:(+e.target.value)/100, overlayTouched:true });
 
-  // ---------- flow field engine ----------
   getPalette(){ const k = this.state.params && this.state.params.palette; return this.PALETTES[k] || this.PALETTES.starlight; }
   hexToRgba(hex, a){ const n = parseInt(hex.replace('#',''),16); return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')'; }
 
@@ -409,7 +406,6 @@ class Component extends DCLogic {
       this.initParts(); sim.needClear = true;
     }
   }
-
   initParts(){
     const sim = this._sim; if (!sim) return;
     const pal = this.getPalette();
@@ -421,7 +417,6 @@ class Component extends DCLogic {
     }
     sim.parts = a;
   }
-
   stepSim(){
     const sim = this._sim; if (!sim) return;
     const ctx = sim.ctx, pal = this.getPalette(), pm = this.state.params;
