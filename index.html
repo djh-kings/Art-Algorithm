@@ -46,8 +46,8 @@
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:40px;">
           <sc-for list="{{ galleryItems }}" as="item" hint-placeholder-count="6">
             <button onClick="{{ item.open }}" style="text-align:left; padding:0; border:1px solid #dcdad2; background:#fbfaf7; border-radius:3px; cursor:pointer; overflow:hidden; font-family:inherit; transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;" style-hover="transform:translateY(-3px); box-shadow:0 10px 28px rgba(0,0,0,.10); border-color:#c4c1b6;">
-              <div style="aspect-ratio:4/3; background:repeating-linear-gradient(45deg,#e7e5dd 0 11px,#efeee9 11px 22px); display:flex; align-items:center; justify-content:center; border-bottom:1px solid #dcdad2;">
-                <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em; color:#b3afa4; text-transform:uppercase;">{{ item.title }}</span>
+              <div style="aspect-ratio:4/3; overflow:hidden; position:relative; border-bottom:1px solid #dcdad2; background:#d8d5cc;">
+                <img src="{{ item.img }}" alt="{{ item.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;" />
               </div>
               <div style="padding:14px 16px 16px;">
                 <div style="font-size:16px; font-weight:600; line-height:1.25;">{{ item.title }}</div>
@@ -77,17 +77,17 @@
       <!-- zone 2: split stage -->
       <div style="flex:1; min-height:330px; display:flex; background:#dedcd4;">
         <!-- left: painting -->
-        <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:repeating-linear-gradient(45deg,#e7e5dd 0 12px,#eceae3 12px 24px); display:flex; align-items:center; justify-content:center;">
-          <div style="position:absolute; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#a8a499;">Painting</div>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.05em; color:#b3afa4; text-transform:uppercase;">{{ art.title }}</span>
+        <div style="flex:1; position:relative; border-right:1px solid #c4c1b6; background:#d0cec6; overflow:hidden;">
+          <div style="position:absolute; z-index:2; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,.8); text-shadow:0 1px 3px rgba(0,0,0,.5);">Painting</div>
+          <img src="{{ art.img }}" alt="{{ art.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;" />
         </div>
         <!-- right: simulation -->
         <div style="flex:1; position:relative; background:#0a1330; overflow:hidden;">
           <div style="position:absolute; z-index:3; top:12px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,.55);">{{ rightLabel }}</div>
           <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
             <canvas data-role="sim-canvas" style="position:absolute; inset:0; width:100%; height:100%; display:block;"></canvas>
-            <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:{{ compareOpacity }}; transition:opacity .18s ease; background:repeating-linear-gradient(45deg,#e7e5dd 0 12px,#eceae3 12px 24px); display:flex; align-items:center; justify-content:center;">
-              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.05em; color:#8c887d; text-transform:uppercase;">{{ art.title }}</span>
+            <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:{{ compareOpacity }}; transition:opacity .18s ease; overflow:hidden;">
+              <img src="{{ art.img }}" alt="{{ art.title }}" style="width:100%; height:100%; object-fit:cover; display:block;" />
             </div>
           </sc-if>
           <sc-if value="{{ notFlow }}" hint-placeholder-val="{{ false }}">
@@ -190,8 +190,8 @@
     <div style="flex:1; position:relative; display:flex; flex-direction:column; align-items:center; overflow:auto; background:#e6e4dd;">
       <button onClick="{{ goGallery }}" style="position:absolute; z-index:5; top:16px; right:20px; border:1px solid #c4c1b6; background:#fbfaf7; color:#3a3833; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 12px; border-radius:3px; cursor:pointer;" style-hover="background:#f0eee8;">&#8592; Gallery</button>
 
-      <div style="width:min(720px,86vw); aspect-ratio:4/3; position:relative; margin-top:44px; box-shadow:0 22px 60px rgba(0,0,0,.20); background:repeating-linear-gradient(45deg,#e7e5dd 0 13px,#eceae3 13px 26px); display:flex; align-items:center; justify-content:center; overflow:hidden;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.06em; color:#b3afa4; text-transform:uppercase;">{{ art.title }}</span>
+      <div style="width:min(720px,86vw); aspect-ratio:4/3; position:relative; margin-top:44px; box-shadow:0 22px 60px rgba(0,0,0,.20); overflow:hidden; background:#d0cec6;">
+        <img src="{{ art.img }}" alt="{{ art.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;" />
         <sc-if value="{{ revealIsFlow }}" hint-placeholder-val="{{ false }}">
           <canvas data-role="reveal-canvas" style="position:absolute; inset:0; width:100%; height:100%; display:block; opacity:{{ overlayOpacity }}; transition:{{ overlayTransition }};"></canvas>
         </sc-if>
@@ -242,6 +242,7 @@ class Component extends DCLogic {
 
   ARTS = [
     { id:'starry', title:'The Starry Night', artist:'Vincent van Gogh', date:'1889', type:'flowfield', difficulty:'Observable',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',
       algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field · Perlin noise',
       observation:'Where does your eye move first, and why do you think it goes there?',
       context:'A flow field assigns a direction to every point in space; particles released into it trace the currents. The same mathematics describes turbulence, wind, and the swirl of fluids. Van Gogh painted these eddies decades before the theory of turbulence was written down.',
@@ -256,6 +257,7 @@ class Component extends DCLogic {
         { name:'Kolmogorov', noiseScale:5.4, speed:1.6, trailLength:0.88, palette:'cinder' }
       ] },
     { id:'scream', title:'The Scream', artist:'Edvard Munch', date:'1893', type:'flowfield', difficulty:'Arguable',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg',
       algoCode:'FLOW-FIELD', algoName:'Flow fields (Perlin noise)', algoLabel:'Flow field · Perlin noise',
       observation:'The sky and the water seem to move. Trace the direction they flow — where do the bands lead your eye?',
       context:'The undulating bands of the sky and fjord behave like a flow field — a continuous direction map that bends everything passing through it into a single, anxious current.',
@@ -270,6 +272,7 @@ class Component extends DCLogic {
         { name:'Long wave', noiseScale:4.6, speed:1.2, trailLength:0.88, palette:'ash' }
       ] },
     { id:'hiroshige', title:'Plum Park in Kameido', artist:'Utagawa Hiroshige', date:'1857', type:'lsystem', difficulty:'Arguable',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/Ando_Hiroshige_-_Plum_Garden,_Kameido_-_Google_Art_Project.jpg',
       algoCode:'L-SYSTEM', algoName:'L-systems (Lindenmayer systems)', algoLabel:'L-system · grammar editor',
       observation:'Follow a single branch from the trunk to its tip. How many times does it split, and does it split the same way each time?',
       context:'An L-system grows a structure by repeatedly rewriting a string of symbols, each pass adding detail. Lindenmayer devised them in 1968 to model how plants branch: a few rules, applied again and again, produce a whole tree.',
@@ -278,6 +281,7 @@ class Component extends DCLogic {
       stubText:'A preset selector — Sparse branch, Dense canopy, Geometric, Asymmetric — plus an editable rule string you can modify, and a reset button to recover the preset. Live grammar editor in development.',
       presets:[{name:'Sparse branch'},{name:'Dense canopy'},{name:'Geometric'},{name:'Asymmetric'}] },
     { id:'conesnail', title:'Cone Snail Shell', artist:'Conus textile · nature', date:'—', type:'rule30', difficulty:'Open',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/Conus_textile_(textile_cone_snail)_4_(30876171420).jpg',
       algoCode:'RULE-30', algoName:'Rule 30 (cellular automata)', algoLabel:'Rule 30 · cellular automaton',
       observation:'The pattern looks random, yet it never quite repeats and never falls apart. Is it random, or is something controlling it?',
       context:'Rule 30 is a one-dimensional cellular automaton: each cell\'s next state depends only on itself and its two neighbours. From a single starting cell it produces patterns indistinguishable from random — yet entirely deterministic.',
@@ -286,6 +290,7 @@ class Component extends DCLogic {
       stubText:'The simplest controls of the set — just the starting seed pattern and the colour map. The algorithm itself is fixed; the point is how little you must specify to get complex output. Live simulation in development.',
       presets:[{name:'Single seed'},{name:'Twin seed'},{name:'Scatter'}] },
     { id:'seurat', title:'A Sunday on La Grande Jatte', artist:'Georges Seurat', date:'1884–86', type:'voronoi', difficulty:'Arguable',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/A_Sunday_on_La_Grande_Jatte,_Georges_Seurat,_1884.jpg',
       algoCode:'VORONOI', algoName:'Voronoi stippling', algoLabel:'Voronoi stippling',
       observation:'Step back in your mind\'s eye. The image is built from countless separate dots — how evenly are they spaced, and who decided where each one goes?',
       context:'A Voronoi diagram partitions space into regions, one per seed point, each region nearest its seed. Relax the seeds toward the centre of their regions and the points settle into an even, organic stipple — the way a printer turns a photograph into dots.',
@@ -294,6 +299,7 @@ class Component extends DCLogic {
       stubText:'Seed point count, relaxation iterations, and a colour sampling mode — exact (sampled from the painting), impressionist (with variance), or monochrome. The colour tie to the painting itself is what makes this one special. Live stippling in development.',
       presets:[{name:'Sparse points'},{name:'Dense field'},{name:'Pure colour'}] },
     { id:'harmonograph', title:'Harmonograph Figure', artist:'Pendulum machine', date:'c. 1900', type:'attractor', difficulty:'Open',
+      img:'https://commons.wikimedia.org/wiki/Special:FilePath/Harmonograph.jpg',
       algoCode:'ROSSLER', algoName:'The Rössler attractor', algoLabel:'Strange attractor · Rössler',
       observation:'A machine drew this with no hand guiding it. Does the line look designed to you, or does it look found?',
       context:'A strange attractor is the shape traced by a system that never repeats yet never escapes a bounded region. The Rössler attractor, from just three simple equations, folds a single line into an infinitely intricate orbit.',
@@ -454,7 +460,7 @@ class Component extends DCLogic {
     const unlocked = s.promptReady && (s.obsText || '').trim().length >= 5;
 
     const galleryItems = this.ARTS.map(a => ({
-      id:a.id, title:a.title, artist:a.artist, date:a.date, difficulty:a.difficulty,
+      id:a.id, title:a.title, artist:a.artist, date:a.date, difficulty:a.difficulty, img:a.img,
       open: () => this.openDetective(a.id)
     }));
 
